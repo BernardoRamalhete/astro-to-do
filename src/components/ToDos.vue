@@ -5,6 +5,7 @@
         </li>
         <li 
             v-for="(toDo, index) in toDosList" 
+            :v-show="!toDo.was_deleted"
             :key="toDo.id"
             :class="{
                 'is-updating': updatingToDos.has(toDo.id)
