@@ -70,7 +70,7 @@ const props = defineProps({
     }
 })
 
-const initialToDos = ref(...props.initialToDos.map(todo => (todo)))
+const initialToDos = ref(props.initialToDos.map(todo => (todo)))
 const addedToDos = ref([])
 
 const toDosList = computed(() => {
