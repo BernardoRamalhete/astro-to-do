@@ -5,7 +5,6 @@
         </li>
         <li 
             v-for="(toDo, index) in toDosList" 
-            :v-show="!toDo.was_deleted"
             :key="toDo.id"
             :class="{
                 'is-updating': updatingToDos.has(toDo.id)
@@ -71,10 +70,11 @@ const props = defineProps({
     }
 })
 
-const addedToDos = reactive([])
+const initialToDos = ref(...props.initialToDos.map(todo => (todo)))
+const addedToDos = ref([])
 
 const toDosList = computed(() => {
-    return [...props.initialToDos.map(todo => ({...todo, was_deleted: false})), ...addedToDos]
+    return [...initialToDos.value, ...addedToDos.value]
 })
 
 const updatingToDos = reactive(new Set())
@@ -168,7 +168,7 @@ async function addNewToDo() {
         if(!response.data) throw response.message
         
         newToDoModel.value = ''
-        addedToDos.push({...response.data, was_deleted: false})
+        addedToDos.value.push(response.data)
     } catch (error) {
         newToDoError.value = true
         console.log(error)
@@ -195,7 +195,8 @@ async function deleteToDo(toDoId, index) {
 
         if(!response.data) throw response.message
 
-        toDosList.value[index].was_deleted = true
+        initialToDos.value = initialToDos.value.filter(toDo => toDo.id != toDoId)
+        addedToDos.value = initialToDos.value.filter(toDo => toDo.id != toDoId)
     } catch (error) {
         console.log(error)
         return
