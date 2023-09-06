@@ -1,0 +1,28 @@
+--- 
+import TheHeader from '../components/TheHeader.vue'
+
+const { title, description = 'Basic To Do App' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={ description }>
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
+		<link rel="stylesheet" href="/styles/global.css" />
+		<title>{title}</title>
+	</head>
+	<style>
+		main {
+			margin-inline: 20px;
+		}
+	</style>
+	<body>
+		<TheHeader client:load/>
+		<main>
+			<slot />
+		</main>
+	</body>
+</html>

@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro'
+import ToDos from '../components/ToDos.vue'
+
+const userToken = Astro.cookies.get('user')
+
+if(userToken == undefined) {
+	return Astro.redirect('/login');
+}
+
+const response = await fetch(Astro.url + '/api/user', {
+	method: 'GET',
+	headers: {
+		Authorization: `Bearer ${userToken.value}`
+	}
+}).then(res => res.json())
+
+if(!response.data) {
+	return Astro.redirect('/login');
+}
+
+const username = response.data.username
+
+const initialToDos = await fetch(Astro.url + '/api/todo', {
+	method: 'GET',
+	headers: {
+		Authorization: `Bearer ${userToken.value}`
+	}
+}).then(res => res.json())
+---
+
+<Layout title="To Done">
+	<h1>Hello, { username }</h1>
+	<ToDos client:load initialToDos={initialToDos.data} userToken={userToken.value}/>
+</Layout>
